@@ -73,11 +73,11 @@ jobs:
           host: ${{ secrets.LIVE_SERVER_IP }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if sudo docker ps -a --format '{{.Names}}' | grep -q "^main-server"; then
-              sudo docker stop main-server
-              sudo docker rm main-server
+            if sudo docker ps -a --format '{{.Names}}' | grep -q "^back-end"; then
+              sudo docker stop back-end
+              sudo docker rm back-end
             else
-              echo "Container main-server does not exist. Skipping stop and remove."
+              echo "Container back-end does not exist. Skipping stop and remove."
             fi
 
       - name: Pull and Deploy Docker Image
@@ -90,7 +90,7 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPONAME }}:latest
             echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" > .env
-            sudo docker-compose --env-file .env -f docker-compose.yml up -d
+            sudo docker-compose --env-file .env -f docker-compose-back.yml up -d
 
             
       - name: Check Deploy Server URL
